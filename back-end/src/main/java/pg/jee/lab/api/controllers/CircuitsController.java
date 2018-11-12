@@ -18,6 +18,9 @@ import static pg.jee.lab.api.UriUtils.uri;
 @Path("/circuits")
 public class CircuitsController {
 
+    private final static String CIRCUIT_PATH_PARAM = "circuit";
+    private final static String GET_CIRCUIT_METHOD_NAME = "getCircuit";
+
     @Inject
     ResultService resultService;
 
@@ -28,31 +31,31 @@ public class CircuitsController {
 
     @GET
     @Path("/{circuit}")
-    public Circuit getCircuit(@PathParam("circuit") Circuit circuit) {
+    public Circuit getCircuit(@PathParam(CIRCUIT_PATH_PARAM) Circuit circuit) {
         return circuit;
     }
 
     @POST
     public Response saveCircuit(Circuit circuit) {
         resultService.saveCircuit(circuit);
-        return Response.created(uri(CircuitsController.class, "getCircuit", circuit.getId())).build();
+        return Response.created(uri(CircuitsController.class, GET_CIRCUIT_METHOD_NAME, circuit.getId())).build();
     }
 
     @DELETE
     @Path("/{circuit}")
-    public Response deleteCircuit(@PathParam("circuit") Circuit circuit) {
+    public Response deleteCircuit(@PathParam(CIRCUIT_PATH_PARAM) Circuit circuit) {
         resultService.removeCircuit(circuit);
         return Response.noContent().build();
     }
 
     @PUT
     @Path("/{circuit}")
-    public Response updateCircuit(@PathParam("circuit") Circuit originalCircuit, Circuit updatedCircuit) {
+    public Response updateCircuit(@PathParam(CIRCUIT_PATH_PARAM) Circuit originalCircuit, Circuit updatedCircuit) {
         if (!originalCircuit.getId().equals(updatedCircuit.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         resultService.saveCircuit(updatedCircuit);
-        return Response.ok().build();
+        return Response.ok(uri(CircuitsController.class, GET_CIRCUIT_METHOD_NAME, updatedCircuit.getId())).build();
     }
 }

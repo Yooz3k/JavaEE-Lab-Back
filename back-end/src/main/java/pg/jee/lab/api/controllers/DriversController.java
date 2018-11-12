@@ -18,6 +18,9 @@ import static pg.jee.lab.api.UriUtils.uri;
 @Path("/drivers")
 public class DriversController {
 
+    private final static String DRIVER_PATH_PARAM = "driver";
+    private final static String GET_DRIVER_METHOD_NAME = "getDriver";
+
     @Inject
     ResultService resultService;
 
@@ -28,31 +31,31 @@ public class DriversController {
 
     @GET
     @Path("/{driver}")
-    public Driver getDriver(@PathParam("driver") Driver driver) {
+    public Driver getDriver(@PathParam(DRIVER_PATH_PARAM) Driver driver) {
         return driver;
     }
 
     @POST
     public Response saveDriver(Driver driver) {
         resultService.saveDriver(driver);
-        return Response.created(uri(DriversController.class, "getDriver", driver.getId())).build();
+        return Response.created(uri(DriversController.class, GET_DRIVER_METHOD_NAME, driver.getId())).build();
     }
 
     @DELETE
     @Path("/{driver}")
-    public Response deleteDriver(@PathParam("driver") Driver driver) {
+    public Response deleteDriver(@PathParam(DRIVER_PATH_PARAM) Driver driver) {
         resultService.removeDriver(driver);
         return Response.noContent().build();
     }
 
     @PUT
     @Path("/{driver}")
-    public Response updateDriver(@PathParam("driver") Driver originalDriver, Driver updatedDriver) {
+    public Response updateDriver(@PathParam(DRIVER_PATH_PARAM) Driver originalDriver, Driver updatedDriver) {
         if (!originalDriver.getId().equals(updatedDriver.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         resultService.saveDriver(updatedDriver);
-        return Response.ok().build();
+        return Response.ok(uri(DriversController.class, GET_DRIVER_METHOD_NAME, updatedDriver.getId())).build();
     }
 }

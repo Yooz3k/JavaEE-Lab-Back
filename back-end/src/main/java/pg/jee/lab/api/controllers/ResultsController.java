@@ -18,6 +18,9 @@ import static pg.jee.lab.api.UriUtils.uri;
 @Path("/results")
 public class ResultsController {
 
+    private final static String RESULT_PATH_PARAM = "result";
+    private final static String GET_RESULT_METHOD_NAME = "getResult";
+
     @Inject
     ResultService resultService;
 
@@ -28,31 +31,31 @@ public class ResultsController {
 
     @GET
     @Path("/{result}")
-    public Result getResult(@PathParam("result") Result result) {
+    public Result getResult(@PathParam(RESULT_PATH_PARAM) Result result) {
         return result;
     }
 
     @POST
     public Response saveResult(Result result) {
         resultService.saveResult(result);
-        return Response.created(uri(ResultsController.class, "getResult", result.getId())).build();
+        return Response.created(uri(ResultsController.class, GET_RESULT_METHOD_NAME, result.getId())).build();
     }
 
     @DELETE
     @Path("/{result}")
-    public Response deleteResult(@PathParam("result") Result result) {
+    public Response deleteResult(@PathParam(RESULT_PATH_PARAM) Result result) {
         resultService.removeResult(result);
         return Response.noContent().build();
     }
 
     @PUT
     @Path("/{result}")
-    public Response updateResult(@PathParam("result") Result originalResult, Result updatedResult) {
+    public Response updateResult(@PathParam(RESULT_PATH_PARAM) Result originalResult, Result updatedResult) {
         if (!originalResult.getId().equals(updatedResult.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         resultService.saveResult(updatedResult);
-        return Response.ok().build();
+        return Response.ok(uri(ResultsController.class, GET_RESULT_METHOD_NAME, updatedResult.getId())).build();
     }
 }
