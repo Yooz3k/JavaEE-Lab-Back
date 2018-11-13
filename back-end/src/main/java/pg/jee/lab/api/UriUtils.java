@@ -9,4 +9,12 @@ public class UriUtils {
                 .path(clazz, method)
                 .build(vals);
     }
+
+    public static URI uriWithParams(Class<?> clazz, String method, String limit, String offset) {
+        URI uri = uri(clazz, method);
+        return UriBuilder.fromUri(uri.toString())
+                .queryParam("limit", limit)
+                .queryParam("offset", offset)
+                .build();
+    }
 }

@@ -2,16 +2,18 @@ package pg.jee.lab.api.controllers;
 
 import pg.jee.lab.business.ResultService;
 import pg.jee.lab.business.entities.Result;
+import pg.jee.lab.business.entities.ResultsDTO;
 
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 
 import static pg.jee.lab.api.UriUtils.uri;
 
@@ -19,14 +21,21 @@ import static pg.jee.lab.api.UriUtils.uri;
 public class ResultsController {
 
     private final static String RESULT_PATH_PARAM = "result";
-    private final static String GET_RESULT_METHOD_NAME = "getResult";
+    public final static String GET_RESULT_METHOD_NAME = "getResult";
 
     @Inject
     ResultService resultService;
 
-    @GET
+/*    @GET
     public Collection<Result> getAllResults() {
         return resultService.findAllResults();
+    }*/
+
+    @GET
+    @Path("")
+    public ResultsDTO getResults(@QueryParam("limit") @DefaultValue("100") int limit,
+                                             @QueryParam("offset") @DefaultValue("0") int offset) {
+        return resultService.findResults(offset, limit);
     }
 
     @GET

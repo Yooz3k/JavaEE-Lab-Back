@@ -19,7 +19,7 @@ import static pg.jee.lab.api.UriUtils.uri;
 public class CircuitsController {
 
     private final static String CIRCUIT_PATH_PARAM = "circuit";
-    private final static String GET_CIRCUIT_METHOD_NAME = "getCircuit";
+    public final static String GET_CIRCUIT_METHOD_NAME = "getCircuit";
 
     @Inject
     ResultService resultService;

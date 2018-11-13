@@ -5,9 +5,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pg.jee.lab.api.controllers.CircuitsController;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import static pg.jee.lab.api.UriUtils.uri;
 
 @Getter
 @Setter
@@ -27,4 +30,13 @@ public class Result implements Serializable {
     private Boolean didFinish;
 
     private Circuit circuit;
+
+    private String uriCircuit;
+
+    public String getUriCircuit() {
+        if (circuit.getId() != null)
+            return uri(CircuitsController.class, CircuitsController.GET_CIRCUIT_METHOD_NAME, circuit.getId()).toString();
+        else
+            return "";
+    }
 }
